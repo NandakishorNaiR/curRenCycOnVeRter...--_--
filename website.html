@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: #6e8efb;
+            outline: none;
+        }
+        
+        .swap-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        button {
+            background: #6e8efb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5a7df9;
+        }
+        
+        #swap-btn {
+            background: transparent;
+            color: #6e8efb;
+            border: 1px solid #6e8efb;
+            width: auto;
+            padding: 8px 15px;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+        
+        #swap-btn:hover {
+            background: #f5f7ff;
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        #converted-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        #conversion-rate {
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Currency Converter</h1>
+        
+        <div class="input-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" placeholder="Enter amount" value="1" min="0">
+        </div>
+        
+        <div class="input-group">
+            <label for="from-currency">From</label>
+            <select id="from-currency"></select>
+        </div>
+        
+        <div class="swap-container">
+            <button id="swap-btn">⇅</button>
+        </div>
+        
+        <div class="input-group">
+            <label for="to-currency">To</label>
+            <select id="to-currency"></select>
+        </div>
+        
+        <button id="convert-btn">Convert</button>
+        
+        <div class="result">
+            <div id="converted-amount">-</div>
+            <div id="conversion-rate"></div>
+        </div>
+        
+        <div id="error-msg" class="error"></div>
+        <div id="loading" class="loading">Loading...</div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const amountInput = document.getElementById('amount');
+        const fromCurrencySelect = document.getElementById('from-currency');
+        const toCurrencySelect = document.getElementById('to-currency');
+        const convertBtn = document.getElementById('convert-btn');
+        const swapBtn = document.getElementById('swap-btn');
+        const convertedAmount = document.getElementById('converted-amount');
+        const conversionRate = document.getElementById('conversion-rate');
+        const errorMsg = document.getElementById('error-msg');
+        const loading = document.getElementById('loading');
+
+        // Common currencies to populate our dropdowns
+        const commonCurrencies = [
+            'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'INR', 'BRL',
+            'RUB', 'MXN', 'KRW', 'IDR', 'TRY', 'SAR', 'ZAR', 'SEK', 'NZD', 'NOK'
+        ];
+
+        // Populate currency dropdowns
+        function populateCurrencyDropdowns() {
+            commonCurrencies.forEach(currency => {
+                const option1 = document.createElement('option');
+                option1.value = currency;
+                option1.textContent = currency;
+                
+                const option2 = option1.cloneNode(true);
+                
+                fromCurrencySelect.appendChild(option1);
+                toCurrencySelect.appendChild(option2);
+            });
+            
+            // Set default values
+            fromCurrencySelect.value = 'USD';
+            toCurrencySelect.value = 'EUR';
+        }
+
+        // Fetch exchange rate from API
+        async function fetchExchangeRate(from, to) {
+            loading.style.display = 'block';
+            errorMsg.style.display = 'none';
+            
+            try {
+                const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch exchange rates');
+                }
+                
+                const data = await response.json();
+                const rate = data.rates[to];
+                
+                if (!rate) {
+                    throw new Error(`Exchange rate for ${to} not found`);
+                }
+                
+                return rate;
+            } catch (error) {
+                errorMsg.textContent = error.message || 'An error occurred while fetching exchange rates';
+                errorMsg.style.display = 'block';
+                return null;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Convert currency
+        async function convertCurrency() {
+            const amount = parseFloat(amountInput.value);
+            const from = fromCurrencySelect.value;
+            const to = toCurrencySelect.value;
+            
+            if (isNaN(amount) || amount < 0) {
+                errorMsg.textContent = 'Please enter a valid amount';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            const rate = await fetchExchangeRate(from, to);
+            
+            if (rate) {
+                const result = (amount * rate).toFixed(2);
+                convertedAmount.textContent = `${result} ${to}`;
+                conversionRate.textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
+            }
+        }
+
+        // Swap currencies
+        function swapCurrencies() {
+            const temp = fromCurrencySelect.value;
+            fromCurrencySelect.value = toCurrencySelect.value;
+            toCurrencySelect.value = temp;
+            convertCurrency();
+        }
+
+        // Event Listeners
+        convertBtn.addEventListener('click', convertCurrency);
+        swapBtn.addEventListener('click', swapCurrencies);
+        amountInput.addEventListener('input', convertCurrency);
+        fromCurrencySelect.addEventListener('change', convertCurrency);
+        toCurrencySelect.addEventListener('change', convertCurrency);
+
+        // Initialize the app
+        populateCurrencyDropdowns();
+        convertCurrency(); // Perform initial conversion
+    </script>
+</body>
+</html>
