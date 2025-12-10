@@ -18,7 +18,11 @@ A simple and responsive **Currency Converter Web App** that allows users to conv
 
 ## 🖥️ Preview  
 
-https://github.com/user-attachments/assets/59fb887d-53e1-4328-9489-b4e264efc260
+
+https://github.com/user-attachments/assets/7b0f88b1-5650-42a4-a5bb-e528217fe28f
+
+
+
 ---
 
 ## 📂 Project Structure
