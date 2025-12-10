@@ -2,6 +2,10 @@
 
 A simple and responsive **Currency Converter Web App** that allows users to convert between world currencies in real-time using live exchange rates from a public API.
 
+
+https://github.com/user-attachments/assets/59fb887d-53e1-4328-9489-b4e264efc260
+
+
 ---
 
 ## 🚀 Features
