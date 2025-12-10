@@ -1,73 +1,88 @@
-💱 Currency Converter
+# 💱 Currency Converter
 
-A simple and responsive Currency Converter Web App that allows users to convert between different world currencies in real-time using live exchange rates from a public API.
+A simple and responsive **Currency Converter Web App** that allows users to convert between world currencies in real-time using live exchange rates from a public API.
 
-🚀 Features
+---
 
-🌍 Supports 20+ major global currencies
+## 🚀 Features
 
-⚡ Fetches real-time exchange rates via ExchangeRate API
+- 🌍 Supports **20+ major global currencies**
+- ⚡ Fetches **real-time exchange rates** via ExchangeRate API
+- 🔁 **Instant conversion** as you type
+- 🔄 **Swap button** to reverse selected currencies
+- 🎨 **Beautiful gradient UI** with responsive design
+- ⚠️ Built-in **error handling** (invalid input, API issues)
 
-🔁 Instant conversion as you type
+---
 
-🔄 Swap button to reverse currency pairs
+## 🖥️ Preview  
+*(Add GIF or screenshot here if you want)*
 
-🎨 Beautiful gradient UI with responsive design
+---
 
-⚠️ Error handling for invalid inputs or failed API requests
+## 📂 Project Structure
 
-🖥️ Preview
+```text
+currency-converter/
+│
+├── website.html      # Main HTML page (UI + embedded JS)
+├── app.js            # Script for API calls and conversion logic
+└── README.md         # Project documentation
+```
 
-📂 Project Structure
-├── website.html     # Main HTML file with styling and JS script
-├── app.js           # (Optional) Script for fetching data from an external API
-└── README.md        # Project documentation
+---
 
-⚙️ Technologies Used
+## ⚙️ Technologies Used
 
-HTML5 – Structure and layout
+- **HTML5** – Structure & layout  
+- **CSS3** – Styling & responsive design  
+- **JavaScript (ES6)** – Logic, API calls, DOM updates  
+- **ExchangeRate API** – Live currency exchange data  
 
-CSS3 – Responsive design and styling
+---
 
-JavaScript (ES6) – Logic for conversion, API calls, and DOM manipulation
+## 🧩 How It Works
 
-ExchangeRate API – Real-time currency exchange data
+1. User enters an amount in the input field.  
+2. Selects **source** and **target** currencies from dropdowns.  
+3. App fetches the latest rate from:
 
-🧩 How It Works
-
-The user enters an amount in the input field.
-
-Selects the source and target currencies from dropdown menus.
-
-The app fetches the latest conversion rate from
+```
 https://api.exchangerate-api.com/v4/latest/{FROM_CURRENCY}
-.
+```
 
-The converted amount and current exchange rate are displayed instantly.
+4. Converted amount is displayed instantly.  
+5. User can click the **swap (⇅)** button to reverse currencies.  
 
-Users can swap the currencies using the swap (⇅) button.
+---
 
-🛠️ How to Run Locally
+## 🛠️ How to Run Locally
 
-Clone this repository:
-
+### 1. Clone the repository:
+```bash
 git clone https://github.com/NandakishorNaiR/curRenCycOnVeRter...--_--.git
+```
 
-
-Navigate to the project folder:
-
+### 2. Navigate to the project folder:
+```bash
 cd currency-converter
+```
 
+### 3. Open the web app:
+Simply open **website.html** in any browser — no installation required.
 
-Open website.html in your browser.
+---
 
-That’s it! No additional dependencies required.
+## 🌐 Live Demo
 
+👉 **View Live App on Render:**  
+https://flashcurrencyconverter-powerd-by-knoxy.onrender.com
 
+---
 
-👉 View Live App on Render https://flashcurrencyconverter-powerd-by-knoxy.onrender.com
+## 📸 Example API Output
 
-📸 Example API Output
+```json
 {
   "base": "USD",
   "date": "2025-10-06",
@@ -77,13 +92,18 @@ That’s it! No additional dependencies required.
     "GBP": 0.82
   }
 }
+```
 
-📜 License
+---
 
-This project is licensed under the MIT License — feel free to use and modify it for personal or commercial use.
+## 📜 License
 
-👨‍💻 Author
+This project is licensed under the **MIT License** — free to use and modify.
 
-Nandakishore NAir
+---
 
+## 👨‍💻 Author
+
+**Nandakishore Nair**  
 💬 Built with ❤️ using HTML, CSS, and JavaScript.
+
